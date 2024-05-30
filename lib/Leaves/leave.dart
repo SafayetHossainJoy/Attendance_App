@@ -111,7 +111,6 @@ class _ApplyForLeavePageState extends State<ApplyForLeavePage> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false, // Set this to false to remove the leading widget
-
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
           onPressed: () {

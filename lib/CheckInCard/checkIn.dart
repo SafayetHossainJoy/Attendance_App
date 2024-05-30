@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
 
 class CheckInButton extends StatefulWidget {
   final String checkDate;
@@ -22,6 +24,47 @@ class _CheckInButtonState extends State<CheckInButton> {
   late String status;
   bool isCheckedIn = false; // Flag to track if check-in has been performed
   bool readOnlyMode = false; // Flag to track read-only mode
+
+  Future<void> _checkIn() async {
+    final url = Uri.parse('https://odoo17e.xsellencebdltd.com/api/access_token/attendance/check_in');
+    final headers = {
+      'Content-Type': 'application/json',
+      'Cookie': 'frontend_lang=en_US; session_id=3073f115ac1a6605d09a436c0eea41c5d65b8316'
+    };
+    final body = json.encode({
+      "jsonrpc": "2.0",
+      "params": {
+        "access_token": "9551f604-d70c-47e2-bc54-95a0188691d9",
+        "secret_key": "4aa3e03ba43738ff4023dbc8657e026c",
+        "api_key": "40852880ca39efe757f42ed91655680f",
+        "employee_id": "1",
+        "check_in": DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()),
+        "in_latitude": "23.7529855",
+        "in_longitude": "90.4378656",
+        "in_country_name": "Bangladesh",
+        "in_city": "Dhaka",
+        "in_ip_address": "",
+        "in_browser": "Android"
+      }
+    });
+
+    final response = await http.post(url, headers: headers, body: body);
+
+    if (response.statusCode == 200) {
+      print('Check-in successful');
+      setState(() {
+        final formattedTime = DateFormat.jm().format(DateTime.now());
+        checkInTime = formattedTime;
+        isCheckedIn = true;
+        _updateStatus();
+        readOnlyMode = true;
+      });
+      widget.onCheckIn();
+    } else {
+      print('Check-in failed: ${response.reasonPhrase}');
+      // Handle error, show message to user, etc.
+    }
+  }
 
   @override
   void initState() {
@@ -46,36 +89,10 @@ class _CheckInButtonState extends State<CheckInButton> {
 
   void _setCheckInTime() {
     if (!isCheckedIn) {
-      setState(() {
-        // Format the time in AM/PM format
-        final formattedTime = DateFormat.jm().format(DateTime.now());
-        checkInTime = formattedTime;
-        isCheckedIn =
-            true; // Update the flag to indicate check-in has been performed
-        _updateStatus(); // Update status and statusColor after checking in
-        readOnlyMode = true; // Set read-only mode after check-in
-      });
-      widget
-          .onCheckIn(); // Notify the parent widget that check-in has been done
+      _checkIn();
     } else {
       // You can display a message here indicating that check-in has already been done for today
       // For example: ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Check-in has already been done for today.")));
-    }
-  }
-
-  Future<void> _selectDate(BuildContext context) async {
-    if (!isCheckedIn) {
-      final DateTime? pickedDate = await showDatePicker(
-        context: context,
-        initialDate: selectedDate,
-        firstDate: DateTime(2015, 8),
-        lastDate: DateTime(2101),
-      );
-      if (pickedDate != null && pickedDate != selectedDate) {
-        setState(() {
-          selectedDate = pickedDate;
-        });
-      }
     }
   }
 

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:hrms/BreakTimePerDayCard/break_time.dart';
 import 'package:hrms/CheckInCard/checkIn.dart';
@@ -5,7 +6,8 @@ import 'package:hrms/CheckOutCard/checkOut.dart';
 import 'package:hrms/CurrentLocationCard/location.dart';
 import 'package:hrms/TotalDaysPerMonthCard/workingdays.dart';
 import 'package:hrms/UserProfileCard/userprofile.dart';
-
+import 'package:http/http.dart' as http;
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -13,22 +15,66 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
-
   bool isCheckedIn = false;
+  bool isLoading = true;
 
+  @override
+  void initState() {
+    super.initState();
+    getToken();
+  }
+
+  Future<void> getToken() async {
+    var headers = {
+      'Content-Type': 'application/json',
+      'Cookie': 'session_id=b3549656830f67a14d3ffd3a5f0cf835d1b72214'
+    };
+    var request = http.Request(
+        'GET',
+        Uri.parse(
+            'https://odoo17e.xsellencebdltd.com/api/retrive-access-token/'));
+    request.body = json.encode({
+      "jsonrpc": "2.0",
+      "params": {"db": "odoo17e", "username": "admin", "password": "1234"}
+    });
+    request.headers.addAll(headers);
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      var responseBody = await response.stream.bytesToString();
+      var jsonResponse = json.decode(responseBody);
+
+      // Extract access_token, secret_key, api_key from the response
+      var accessToken = jsonResponse['access_token'];
+      var secretKey = jsonResponse['secret_key'];
+      var apiKey = jsonResponse['api_key'];
+
+      // Store tokens securely
+      final storage = const FlutterSecureStorage();
+      await storage.write(key: 'access_token', value: accessToken);
+      await storage.write(key: 'secret_key', value: secretKey);
+      await storage.write(key: 'api_key', value: apiKey);
+
+      print("Tokens stored successfully");
+    } else {
+      print(response.reasonPhrase);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //backgroundColor: Colors.grey[100], // Set screen background color to grey
       appBar: AppBar(
-        automaticallyImplyLeading: false, // Set this to false to remove the leading widget
+        automaticallyImplyLeading: false,
         elevation: 2,
         centerTitle: true,
         title: const Text(
           'Attendance Details',
-          style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold, fontFamily: 'Roboto'),
+          style: TextStyle(
+              fontSize: 24.0,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Roboto'),
         ),
       ),
       backgroundColor: Colors.white,
@@ -42,7 +88,7 @@ class _HomePageState extends State<HomePage> {
               Container(
                 width: double.infinity,
                 child: Card(
-                  color: Colors.white, // Set card background color to white
+                  color: Colors.white,
                   elevation: 3,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15.0),
@@ -53,8 +99,8 @@ class _HomePageState extends State<HomePage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         UserProfileCard(
-                          userName: 'Safayet Hossain',
-                          jobPosition: 'Software Developer',
+                          name: 'Safayet Hossain',
+                          job_id: 'Software Developer',
                         ),
                       ],
                     ),
@@ -64,7 +110,10 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(height: 20),
               const Text(
                 'Today Attendance',
-                style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold, fontFamily: 'Roboto'),
+                style: TextStyle(
+                    fontSize: 24.0,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Roboto'),
               ),
               const SizedBox(height: 20),
               // Check-in and Check-out card section
@@ -74,7 +123,7 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     Expanded(
                       child: Card(
-                        color: Colors.white, // Set card background color to white
+                        color: Colors.white,
                         elevation: 3,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15.0),
@@ -97,10 +146,10 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 5), // Add some spacing between the cards
+                    const SizedBox(width: 5),
                     Expanded(
                       child: Card(
-                        color: Colors.white, // Set card background color to white
+                        color: Colors.white,
                         elevation: 3,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15.0),
@@ -112,7 +161,7 @@ class _HomePageState extends State<HomePage> {
                             children: [
                               CheckOutButton(
                                 checkDate: DateTime.now().toString(),
-                                isCheckedIn: isCheckedIn,
+                                isCheckedIn: isCheckedIn, employeeId: 1,
                               ),
                             ],
                           ),
@@ -122,7 +171,6 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
               ),
-
               const SizedBox(height: 20),
               // User Total days per month section
               Row(
@@ -144,7 +192,7 @@ class _HomePageState extends State<HomePage> {
                             children: [
                               BreakTimePerDayCard(
                                 breakTime: '30 minutes',
-                                avgTime: 'Average Time 30',
+                                avgTime: 'Average Time 30', employeeId: 1,
                               ),
                             ],
                           ),
@@ -152,8 +200,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   ),
-
-                  const SizedBox(width: 5), // Add space between the cards
+                  const SizedBox(width: 5),
                   Flexible(
                     flex: 1,
                     child: AspectRatio(
@@ -166,11 +213,11 @@ class _HomePageState extends State<HomePage> {
                         ),
                         child: const Padding(
                           padding: EdgeInsets.all(20.0),
-                          child: Column(
+                          child: const Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               TotalDaysPerMonthCard(
-                                totalDays: 26,
+                                totalDays: 22,
                               ),
                             ],
                           ),
@@ -180,13 +227,12 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ],
               ),
-
               const SizedBox(height: 20),
               // User current location section
               Container(
                 width: double.infinity,
                 child: Card(
-                  color: Colors.white, // Set card background color to white
+                  color: Colors.white,
                   elevation: 3,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15.0),
@@ -208,8 +254,6 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      // Bottom Navigation Bar
-
     );
   }
 }

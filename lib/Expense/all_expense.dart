@@ -1,9 +1,10 @@
+import 'dart:convert';
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
 
 class ExpensePage extends StatefulWidget {
   @override
@@ -115,7 +116,7 @@ class _ExpensePageState extends State<ExpensePage> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Expense submitted successfully')),
       );
-      _clearForm();
+      _clearForm(); // Reset the form after submission
       await prefs.remove('expenseData');
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -169,7 +170,7 @@ class _ExpensePageState extends State<ExpensePage> {
   }
 
   Widget _buildReceiptPreview() {
-    final double previewSize = 150.0; // Adjust as needed
+    final double previewSize = 150.0;
 
     if (_receiptImage != null) {
       return Column(
@@ -180,20 +181,73 @@ class _ExpensePageState extends State<ExpensePage> {
             child: Image.file(File(_receiptImage!.path)),
           ),
           const SizedBox(height: 8),
-          const Text('Receipt Attached'), // Status message
+          const Text(
+            'Receipt Attached',
+            style: TextStyle(color: Color(0xFF120078)),
+          ),
         ],
       );
     } else if (_receiptFileName != null) {
       return Column(
         children: [
-          Text('Receipt: $_receiptFileName'),
+          Text(
+            'Receipt: $_receiptFileName',
+            style: const TextStyle(color: Color(0xFF120078)),
+          ),
           const SizedBox(height: 8),
-          const Text('File Attached'), // Status message
+          const Text(
+            'File Attached',
+            style: TextStyle(color: Color(0xFF120078)),
+          ),
         ],
       );
     } else {
-      return const Text('No receipt attached'); // Status message
+      return const Text(
+        'No receipt attached',
+        style: TextStyle(color: Color(0xFF120078)),
+      );
     }
+  }
+
+  Widget _buildFormField({
+    required String hintText,
+    required Icon prefixIcon,
+    required ValueChanged<String> onChanged,
+    TextInputType keyboardType = TextInputType.text,
+    TextEditingController? controller,
+  }) {
+    return TextField(
+      decoration: InputDecoration(
+        hintText: hintText,
+        hintStyle:
+            const TextStyle(color: Color(0xFF120078),fontWeight: FontWeight.w600), // Set hint text color
+        prefixIcon: prefixIcon,
+        filled: true,
+        fillColor: const Color(0xFFF5F5F5),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(
+            color: Color(0xFF9D7FEA),
+          ), // Set outline border color
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(
+            color: Color(0xFF9D7FEA),
+          ), // Set outline border color
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(
+            color: Color(0xFF9D7FEA),
+          ), // Set outline border color
+        ),
+        contentPadding: const EdgeInsets.all(12.0),
+      ),
+      onChanged: onChanged,
+      keyboardType: keyboardType,
+      controller: controller,
+    );
   }
 
   @override
@@ -206,7 +260,23 @@ class _ExpensePageState extends State<ExpensePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Expense Page'),
+        //automaticallyImplyLeading: false, // Set this to false to remove the leading widget
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        elevation: 2,
+        centerTitle: true,
+        title: const Text(
+          'Create Expense',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Poppins-Medium',
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -215,48 +285,26 @@ class _ExpensePageState extends State<ExpensePage> {
           child: ListView(
             children: [
               Card(
-                color: Colors.deepPurple[50],
+                color: const Color(0xFFF5F5F5), // Light Gray
                 margin: const EdgeInsets.symmetric(vertical: 10),
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      TextField(
-                        decoration: InputDecoration(
-                          labelText: 'Description',
-                          prefixIcon:
-                              const Icon(Icons.description, color: Colors.deepPurple),
-                          filled: true,
-                          fillColor: Colors.deepPurple[100],
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide.none,
-                          ),
-                        ),
-                        onChanged: (value) {
-                          _description = value;
-                        },
+                      _buildFormField(
+                        hintText: 'Description',
+                        prefixIcon: const Icon(Icons.description,
+                            color: Color(0xFF120078)), // Deep Blue
+                        onChanged: (value) => _description = value,
                       ),
                       const SizedBox(height: 10),
-                      DropdownButtonFormField<String>(
-                        decoration: InputDecoration(
-                          labelText: 'Category',
-                          prefixIcon:
-                              const Icon(Icons.category, color: Colors.deepPurple),
-                          filled: true,
-                          fillColor: Colors.deepPurple[100],
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide.none,
-                          ),
-                        ),
+                      CustomDropdown(
+                        hintText: 'Category',
+                        prefixIcon: const Icon(Icons.category,
+                            color: Color(0xFF120078)), // Deep Blue
                         value: _selectedCategory,
-                        items: _categories.map((category) {
-                          return DropdownMenuItem(
-                            value: category,
-                            child: Text(category),
-                          );
-                        }).toList(),
+                        items: _categories,
                         onChanged: (value) {
                           setState(() {
                             _selectedCategory = value;
@@ -264,25 +312,12 @@ class _ExpensePageState extends State<ExpensePage> {
                         },
                       ),
                       const SizedBox(height: 10),
-                      DropdownButtonFormField<String>(
-                        decoration: InputDecoration(
-                          labelText: 'Employee',
-                          prefixIcon:
-                              const Icon(Icons.person, color: Colors.deepPurple),
-                          filled: true,
-                          fillColor: Colors.deepPurple[100],
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide.none,
-                          ),
-                        ),
+                      CustomDropdown(
+                        hintText: 'Employee',
+                        prefixIcon: const Icon(Icons.person,
+                            color: Color(0xFF120078)), // Deep Blue
                         value: _selectedEmployee,
-                        items: _employees.map((employee) {
-                          return DropdownMenuItem(
-                            value: employee,
-                            child: Text(employee),
-                          );
-                        }).toList(),
+                        items: _employees,
                         onChanged: (value) {
                           setState(() {
                             _selectedEmployee = value;
@@ -290,25 +325,12 @@ class _ExpensePageState extends State<ExpensePage> {
                         },
                       ),
                       const SizedBox(height: 10),
-                      DropdownButtonFormField<String>(
-                        decoration: InputDecoration(
-                          labelText: 'Paid By',
-                          prefixIcon:
-                              const Icon(Icons.payment, color: Colors.deepPurple),
-                          filled: true,
-                          fillColor: Colors.deepPurple[100],
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide.none,
-                          ),
-                        ),
+                      CustomDropdown(
+                        hintText: 'Paid By',
+                        prefixIcon: const Icon(Icons.payment,
+                            color: Color(0xFF120078)), // Deep Blue
                         value: _paidBy,
-                        items: _paidByOptions.map((option) {
-                          return DropdownMenuItem(
-                            value: option,
-                            child: Text(option),
-                          );
-                        }).toList(),
+                        items: _paidByOptions,
                         onChanged: (value) {
                           setState(() {
                             _paidBy = value;
@@ -316,67 +338,56 @@ class _ExpensePageState extends State<ExpensePage> {
                         },
                       ),
                       const SizedBox(height: 10),
-                      TextField(
-                        decoration: InputDecoration(
-                          labelText: 'Total (Taka)',
-                          prefixIcon: const Icon(Icons.attach_money,
-                              color: Colors.deepPurple),
-                          filled: true,
-                          fillColor: Colors.deepPurple[100],
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide.none,
-                          ),
-                        ),
+                      _buildFormField(
+                        hintText:'Total (Taka)',
+                        prefixIcon: const Icon(Icons.money_rounded,
+                            color: Color(0xFF120078)), // Deep Blue
+                        onChanged: (value) => _amount = double.tryParse(value),
                         keyboardType: TextInputType.number,
-                        onChanged: (value) {
-                          _amount = double.tryParse(value);
-                        },
                       ),
                       const SizedBox(height: 10),
-                      ListTile(
-                        tileColor: Colors.deepPurple[100],
+                      Card(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
+                          side: const BorderSide(
+                              color: Color(0xFF9D7FEA)), // Set border color
                         ),
-                        title: Text(
-                          _expenseDate == null
-                              ? 'Expense Date'
-                              : 'Expense Date:  ${_formatDate(_expenseDate!)}',
-                          style: const TextStyle(
-                              color: Colors.deepPurple,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        trailing: const Icon(Icons.calendar_today,
-                            color: Colors.deepPurple),
-                        onTap: () => _selectDate(context),
-                      ),
-                      const SizedBox(height: 10),
-                      ListTile(
-                        tileColor: Colors.deepPurple[100],
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        title: _buildReceiptPreview(),
-                        trailing: const Icon(Icons.attach_file,
-                            color: Colors.deepPurple),
-                        onTap: _pickReceipt,
-                      ),
-                      const SizedBox(height: 10),
-                      TextField(
-                        decoration: InputDecoration(
-                          labelText: 'Note',
-                          prefixIcon:
-                              const Icon(Icons.note, color: Colors.deepPurple),
-                          filled: true,
-                          fillColor: Colors.deepPurple[100],
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide.none,
+                        child: ListTile(
+                          title: Text(
+                            _expenseDate == null
+                                ? 'Expense Date'
+                                : 'Expense Date: ${_formatDate(_expenseDate!)}',
+                            style: const TextStyle(
+                              color: Color(0xFF120078), // Deep Blue
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
+                          trailing: const Icon(Icons.calendar_today,
+                              color: Color(0xFF120078)), // Deep Blue
+                          onTap: () => _selectDate(context),
                         ),
+                      ),
+                      const SizedBox(height: 10),
+                      Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          side: const BorderSide(
+                              color: Color(0xFF9D7FEA)), // Set border color
+                        ),
+                        child: ListTile(
+                          title: _buildReceiptPreview(),
+                          trailing: const Icon(Icons.attach_file,
+                              color: Color(0xFF120078)), // Deep Blue
+                          onTap: _pickReceipt,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      _buildFormField(
+                        hintText: 'Note',
+                        prefixIcon: const Icon(Icons.note,
+                            color: Color(0xFF120078)), // Deep Blue
+                        onChanged: (value) => _noteController.text = value,
                         controller: _noteController,
-                        maxLines: 3,
                       ),
                     ],
                   ),
@@ -392,9 +403,9 @@ class _ExpensePageState extends State<ExpensePage> {
                         style: TextStyle(
                             fontWeight: FontWeight.bold, color: Colors.white)),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 15, 15, 15),
+                      backgroundColor: const Color(0xFF120078), // Deep Blue
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 32.0, vertical: 16.0),
+                          horizontal: 28.0, vertical: 14.0),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -406,9 +417,9 @@ class _ExpensePageState extends State<ExpensePage> {
                         style: TextStyle(
                             fontWeight: FontWeight.bold, color: Colors.black)),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 219, 206, 241),
+                      backgroundColor: const Color(0xFF9D7FEA), // Light Purple
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 32.0, vertical: 16.0),
+                          horizontal: 28.0, vertical: 14.0),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -424,3 +435,68 @@ class _ExpensePageState extends State<ExpensePage> {
   }
 }
 
+class CustomDropdown extends StatelessWidget {
+  final String hintText;
+  final Icon prefixIcon;
+  final String? value;
+  final List<String> items;
+  final ValueChanged<String?> onChanged;
+
+  const CustomDropdown({
+    required this.hintText,
+    required this.prefixIcon,
+    this.value,
+    required this.items,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(8.0),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF5F5F5), // Light Gray
+        borderRadius: BorderRadius.circular(10),
+
+        border: Border.all(
+          color: const Color(0xFF9D7FEA),
+        ),
+      ),
+      child: Row(
+        children: [
+          prefixIcon,
+          const SizedBox(width: 8), // Add some space between icon and dropdown
+          Expanded(
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                value: value,
+                icon: const Icon(Icons.arrow_drop_down,
+                    color: Color(0xFF120078)), // Deep Blue
+                iconSize: 24, // Adjust icon size if needed
+                isExpanded: true,
+                hint: Text(
+                  hintText,
+                  style: const TextStyle(
+                    color: Color(0xFF120078), // Deep Blue
+                  ),
+                ),
+                onChanged: onChanged,
+                items: items.map((item) {
+                  return DropdownMenuItem(
+                    value: item,
+                    child: Text(
+                      item,
+                      style: const TextStyle(
+                        color: Color(0xFF120078), // Deep Blue
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

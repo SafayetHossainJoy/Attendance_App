@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 class UserProfileCard extends StatelessWidget {
-  final String userName;
-  final String jobPosition;
+  final String name;
+  final String job_id;
 
   const UserProfileCard({
     Key? key,
-    required this.userName,
-    required this.jobPosition,
+    required this.name,
+    required this.job_id,
   }) : super(key: key);
 
   @override
@@ -20,7 +20,7 @@ class UserProfileCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                userName,
+                name,
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -30,7 +30,7 @@ class UserProfileCard extends StatelessWidget {
               ),
               const SizedBox(height: 5),
               Text(
-                jobPosition,
+                job_id,
                 style: TextStyle(
                   fontSize: 20,
                   fontFamily: 'Roboto',

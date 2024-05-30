@@ -1,11 +1,17 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class BreakTimePerDayCard extends StatefulWidget {
   final String avgTime;
+  final int employeeId; // Add employeeId as a parameter
 
   const BreakTimePerDayCard({
     Key? key,
-    required this.avgTime, required String breakTime,
+    required this.avgTime,
+    required this.employeeId, required String breakTime, // Initialize employeeId
   }) : super(key: key);
 
   @override
@@ -19,23 +25,89 @@ class _BreakTimePerDayCardState extends State<BreakTimePerDayCard> {
   int totalBreaks = 0;
   int totalBreakDuration = 0;
 
-  void startBreak() {
+  Future<void> startBreak() async {
     setState(() {
       isOnBreak = true;
       breakStartTime = DateTime.now();
     });
+
+    final url = Uri.parse('https://odoo17e.xsellencebdltd.com/api/access_token/breaktime/employee');
+    final headers = {
+      'Content-Type': 'application/json',
+      'Cookie': 'frontend_lang=en_US; session_id=3073f115ac1a6605d09a436c0eea41c5d65b8316'
+    };
+    final body = json.encode({
+      "jsonrpc": "2.0",
+      "params": {
+        "access_token": "9551f604-d70c-47e2-bc54-95a0188691d9",
+        "secret_key": "4aa3e03ba43738ff4023dbc8657e026c",
+        "api_key": "40852880ca39efe757f42ed91655680f",
+        "employee_id": widget.employeeId, // Use the employeeId from the widget
+        "break_start": DateFormat('yyyy-MM-dd HH:mm:ss').format(breakStartTime!),
+      }
+    });
+
+    final response = await http.post(url, headers: headers, body: body);
+
+    if (response.statusCode == 200) {
+      print('Break started successfully');
+    } else {
+      print('Failed to start break: ${response.reasonPhrase}');
+      Fluttertoast.showToast(
+        msg: "Failed to start break. Please try again.",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    }
   }
 
-  void endBreak() {
+  Future<void> endBreak() async {
+    final breakEndTime = DateTime.now();
+    final duration = breakEndTime.difference(breakStartTime!);
     setState(() {
       isOnBreak = false;
-      // Calculate break duration
-      DateTime breakEndTime = DateTime.now();
-      Duration duration = breakEndTime.difference(breakStartTime!);
       breakDuration = duration.inMinutes;
       totalBreakDuration += breakDuration;
       totalBreaks++;
     });
+
+    final url = Uri.parse('https://odoo17e.xsellencebdltd.com/api/access_token/breaktime/employee');
+    final headers = {
+      'Content-Type': 'application/json',
+      'Cookie': 'frontend_lang=en_US; session_id=3073f115ac1a6605d09a436c0eea41c5d65b8316'
+    };
+    final body = json.encode({
+      "jsonrpc": "2.0",
+      "params": {
+        "access_token": "9551f604-d70c-47e2-bc54-95a0188691d9",
+        "secret_key": "4aa3e03ba43738ff4023dbc8657e026c",
+        "api_key": "40852880ca39efe757f42ed91655680f",
+        "employee_id": widget.employeeId, // Use the employeeId from the widget
+        "break_start": DateFormat('yyyy-MM-dd HH:mm:ss').format(breakStartTime!),
+        "break_end": DateFormat('yyyy-MM-dd HH:mm:ss').format(breakEndTime),
+      }
+    });
+
+    final response = await http.post(url, headers: headers, body: body);
+
+    if (response.statusCode == 200) {
+      print('Break ended successfully');
+    } else {
+      print('Failed to end break: ${response.reasonPhrase}');
+      Fluttertoast.showToast(
+        msg: "Failed to end break. Please try again.",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    }
   }
 
   @override
@@ -105,7 +177,11 @@ class _BreakTimePerDayCardState extends State<BreakTimePerDayCard> {
         ],
         RichText(
           text: TextSpan(
-            style: const TextStyle(fontSize: 18, color: Colors.black, fontFamily: 'Roboto'),
+            style: const TextStyle(
+              fontSize: 18,
+              color: Colors.black,
+              fontFamily: 'Roboto',
+            ),
             children: [
               TextSpan(
                 text: '${isOnBreak ? 'Running' : '$breakDuration minutes'}',
@@ -117,13 +193,18 @@ class _BreakTimePerDayCardState extends State<BreakTimePerDayCard> {
         const SizedBox(height: 10),
         RichText(
           text: TextSpan(
-            style: const TextStyle(fontSize: 18, color: Colors.black, fontFamily: 'Roboto'),
+            style: const TextStyle(
+              fontSize: 18,
+              color: Colors.black,
+              fontFamily: 'Roboto',
+            ),
             children: [
               const TextSpan(
                 text: 'Average Time: ',
               ),
               TextSpan(
-                text: '${totalBreaks == 0 ? '0' : (totalBreakDuration / totalBreaks).toStringAsFixed(2)}',
+                text:
+                    '${totalBreaks == 0 ? '0' : (totalBreakDuration / totalBreaks).toStringAsFixed(2)}',
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               const TextSpan(
@@ -136,3 +217,4 @@ class _BreakTimePerDayCardState extends State<BreakTimePerDayCard> {
     );
   }
 }
+
