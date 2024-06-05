@@ -27,16 +27,16 @@ class _CheckInButtonState extends State<CheckInButton> {
 
   Future<void> _checkIn() async {
     final url = Uri.parse('https://odoo17e.xsellencebdltd.com/api/access_token/attendance/check_in');
-    final headers = {
-      'Content-Type': 'application/json',
-      'Cookie': 'frontend_lang=en_US; session_id=3073f115ac1a6605d09a436c0eea41c5d65b8316'
-    };
+final headers = {
+  'Content-Type': 'application/json',
+  'Cookie': 'frontend_lang=en_US; session_id=7b111f1dba603cb9b9343918d81942386495fdd6'
+};
     final body = json.encode({
       "jsonrpc": "2.0",
       "params": {
-        "access_token": "9551f604-d70c-47e2-bc54-95a0188691d9",
-        "secret_key": "4aa3e03ba43738ff4023dbc8657e026c",
-        "api_key": "40852880ca39efe757f42ed91655680f",
+        "access_token": "69961c52-0d2d-45fc-b074-2569996d2a88",
+        "secret_key": "6933b91181e74ed2c93b9ff78ad3f872",
+        "api_key": "1394ae6755d2862731871b489fa9444c",
         "employee_id": "1",
         "check_in": DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()),
         "in_latitude": "23.7529855",
@@ -51,7 +51,7 @@ class _CheckInButtonState extends State<CheckInButton> {
     final response = await http.post(url, headers: headers, body: body);
 
     if (response.statusCode == 200) {
-      print('Check-in successful');
+      print('Check-in successful ${response.body}');
       setState(() {
         final formattedTime = DateFormat.jm().format(DateTime.now());
         checkInTime = formattedTime;

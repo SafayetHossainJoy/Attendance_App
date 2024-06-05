@@ -34,14 +34,14 @@ class _BreakTimePerDayCardState extends State<BreakTimePerDayCard> {
     final url = Uri.parse('https://odoo17e.xsellencebdltd.com/api/access_token/breaktime/employee');
     final headers = {
       'Content-Type': 'application/json',
-      'Cookie': 'frontend_lang=en_US; session_id=3073f115ac1a6605d09a436c0eea41c5d65b8316'
+      'Cookie': 'frontend_lang=en_US; session_id=7b111f1dba603cb9b9343918d81942386495fdd6'
     };
     final body = json.encode({
       "jsonrpc": "2.0",
       "params": {
-        "access_token": "9551f604-d70c-47e2-bc54-95a0188691d9",
-        "secret_key": "4aa3e03ba43738ff4023dbc8657e026c",
-        "api_key": "40852880ca39efe757f42ed91655680f",
+        "access_token": "69961c52-0d2d-45fc-b074-2569996d2a88",
+        "secret_key": "6933b91181e74ed2c93b9ff78ad3f872",
+        "api_key": "1394ae6755d2862731871b489fa9444c",
         "employee_id": widget.employeeId, // Use the employeeId from the widget
         "break_start": DateFormat('yyyy-MM-dd HH:mm:ss').format(breakStartTime!),
       }
@@ -78,14 +78,14 @@ class _BreakTimePerDayCardState extends State<BreakTimePerDayCard> {
     final url = Uri.parse('https://odoo17e.xsellencebdltd.com/api/access_token/breaktime/employee');
     final headers = {
       'Content-Type': 'application/json',
-      'Cookie': 'frontend_lang=en_US; session_id=3073f115ac1a6605d09a436c0eea41c5d65b8316'
+      'Cookie': 'frontend_lang=en_US; session_id=7b111f1dba603cb9b9343918d81942386495fdd6'
     };
     final body = json.encode({
       "jsonrpc": "2.0",
       "params": {
-        "access_token": "9551f604-d70c-47e2-bc54-95a0188691d9",
-        "secret_key": "4aa3e03ba43738ff4023dbc8657e026c",
-        "api_key": "40852880ca39efe757f42ed91655680f",
+        "access_token": "69961c52-0d2d-45fc-b074-2569996d2a88",
+        "secret_key": "6933b91181e74ed2c93b9ff78ad3f872",
+        "api_key": "1394ae6755d2862731871b489fa9444c",
         "employee_id": widget.employeeId, // Use the employeeId from the widget
         "break_start": DateFormat('yyyy-MM-dd HH:mm:ss').format(breakStartTime!),
         "break_end": DateFormat('yyyy-MM-dd HH:mm:ss').format(breakEndTime),

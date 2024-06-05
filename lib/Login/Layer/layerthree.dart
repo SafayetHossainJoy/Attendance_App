@@ -31,16 +31,16 @@ class _LayerThreeState extends State<LayerThree> {
 
     var headers = {
       'Content-Type': 'application/json',
-      'Cookie': 'session_id=9bed94b43d7e67f7c9a2eb7ec6801210473a517c'
+      'Cookie':
+          'frontend_lang=en_US; session_id=cbfdd78053b4151e66cc287241c6860d7442d3b0'
     };
-    var request = http.Request('POST', Uri.parse('https://odoo17e.xsellencebdltd.com/web/session/authenticate'));
+    var request = http.Request(
+        'POST',
+        Uri.parse(
+            'https://odoo17e.xsellencebdltd.com/web/session/authenticate'));
     request.body = json.encode({
       "jsonrpc": "2.0",
-      "params": {
-        "db": "odoo17e",
-        "login": username,
-        "password": password
-      }
+      "params": {"db": "odoo17e", "login": username, "password": password}
     });
     request.headers.addAll(headers);
 
@@ -62,7 +62,8 @@ class _LayerThreeState extends State<LayerThree> {
     } else {
       print(response.reasonPhrase);
       // Show error message
-      _showAlertDialog('Error', 'Authentication failed: Invalid username or password');
+      _showAlertDialog(
+          'Error', 'Authentication failed: Invalid username or password');
     }
   }
 
