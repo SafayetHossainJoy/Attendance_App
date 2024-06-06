@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:hrms/UserProfileCard/userProfile_model.dart';
 
 class UserProfileCard extends StatelessWidget {
-  final String name;
-  final String job_id;
+  final UserProfile? userProfile;
 
   const UserProfileCard({
     Key? key,
-    required this.name,
-    required this.job_id,
+    this.userProfile,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    if (userProfile == null) {
+      return Center(child: CircularProgressIndicator());
+    }
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -20,7 +23,7 @@ class UserProfileCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                name,
+                userProfile!.name,
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -30,7 +33,7 @@ class UserProfileCard extends StatelessWidget {
               ),
               const SizedBox(height: 5),
               Text(
-                job_id,
+                userProfile!.jobId,
                 style: TextStyle(
                   fontSize: 20,
                   fontFamily: 'Roboto',
@@ -41,11 +44,9 @@ class UserProfileCard extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 10), // Add some space between the image and text
-        const CircleAvatar(
+        CircleAvatar(
           radius: 40, // Adjust the size of the avatar as needed
-          backgroundImage: AssetImage(
-            'assets/images/com.png', // Replace with your image asset
-          ),
+          backgroundImage: NetworkImage(userProfile!.image), // Replace with your image asset
         ),
       ],
     );
