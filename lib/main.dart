@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hrms/Homepage.dart';
+// import 'package:hrms/Homepage.dart';
 import 'package:hrms/splash.dart';
 
 void main() {
@@ -11,11 +11,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-       //home: SplashScreen(),
+       home: SplashScreen(),
       // home: ExpensePage(),
       // home: AccessTokenPage(),
          // home: TotalDaysPerMonthCard(),
-home: HomePage(),
+       //home: HomePage(),
     );
   }
 }
