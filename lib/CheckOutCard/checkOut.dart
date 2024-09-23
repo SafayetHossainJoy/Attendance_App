@@ -229,6 +229,7 @@
 
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:hrms/Login/login_service.dart';
 import 'package:intl/intl.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
@@ -260,39 +261,24 @@ class _CheckOutButtonState extends State<CheckOutButton> {
   void initState() {
     super.initState();
     selectedDate = DateTime.parse(widget.checkDate);
-    fetchSessionId();
   }
-
-  Future<void> fetchSessionId() async {
-    String? session = await getSessionIdFromWherever();
-    if (session != null) {
-      setState(() {
-        sessionId = session;
-      });
-    }
-  }
-
-  Future<String?> getSessionIdFromWherever() async {
-    // Implement your logic to fetch session ID here (e.g., from shared preferences)
-    return '7b111f1dba603cb9b9343918d81942386495fdd6'; // Dummy session ID for demonstration
-  }
-
   Future<void> _checkOut() async {
-    final url = Uri.parse('https://odoo17e.xsellencebdltd.com/api/access_token/attendance/check_out');
-    final headers = {
+    final url = Uri.parse('https://vxservice17.xsellencebdltd.com/api/attendance/check_out');
+    var headers = {
       'Content-Type': 'application/json',
-      'Cookie': 'frontend_lang=en_US; session_id=$sessionId' // Use dynamic session ID
+      'Cookie': 'session_id=25d17c4a30984924d5862853b1b6a5aa663afe37'
     };
+    
     final body = json.encode({
       "jsonrpc": "2.0",
       "params": {
-        "access_token": "69961c52-0d2d-45fc-b074-2569996d2a88",
-        "secret_key": "6933b91181e74ed2c93b9ff78ad3f872",
-        "api_key": "1394ae6755d2862731871b489fa9444c",
-        "employee_id": widget.employeeId,
+        "access_token": "638a849b-8fdd-4148-a9a0-eb28772c15e6",
+        "secret_key": "956c9db53a453a15effd2497d775f733",
+        "api_key": "8632a5478fe3aaa5d4d25616576b9174",
+        "employee_id": "1453",
         "check_out": DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()),
-        "out_latitude": "23.7529855",
-        "out_longitude": "90.4378656",
+        "in_latitude": auth.latitude,
+        "in_longitude": auth.longitude,
         "out_country_name": "Bangladesh",
         "out_city": "Dhaka",
         "out_ip_address": "",

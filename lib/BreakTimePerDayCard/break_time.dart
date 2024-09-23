@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+//import 'package:hrms/Login/login_service.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -25,24 +26,24 @@ class _BreakTimePerDayCardState extends State<BreakTimePerDayCard> {
   int totalBreaks = 0;
   int totalBreakDuration = 0;
 
-  Future<void> startBreak() async {
+    Future<void> startBreak() async {
     setState(() {
       isOnBreak = true;
       breakStartTime = DateTime.now();
     });
 
-    final url = Uri.parse('https://odoo17e.xsellencebdltd.com/api/access_token/breaktime/employee');
-    final headers = {
+    final url = Uri.parse('https://vxservice17.xsellencebdltd.com/api/breaktime/employee');
+     var headers = {
       'Content-Type': 'application/json',
-      'Cookie': 'frontend_lang=en_US; session_id=7b111f1dba603cb9b9343918d81942386495fdd6'
+      'Cookie': 'session_id=25d17c4a30984924d5862853b1b6a5aa663afe37'
     };
     final body = json.encode({
       "jsonrpc": "2.0",
       "params": {
-        "access_token": "69961c52-0d2d-45fc-b074-2569996d2a88",
-        "secret_key": "6933b91181e74ed2c93b9ff78ad3f872",
-        "api_key": "1394ae6755d2862731871b489fa9444c",
-        "employee_id": widget.employeeId, // Use the employeeId from the widget
+        "access_token": "638a849b-8fdd-4148-a9a0-eb28772c15e6",
+        "secret_key": "956c9db53a453a15effd2497d775f733",
+        "api_key": "8632a5478fe3aaa5d4d25616576b9174",
+        "employee_id": "1453", // Use the employeeId from the widget
         "break_start": DateFormat('yyyy-MM-dd HH:mm:ss').format(breakStartTime!),
       }
     });
@@ -75,18 +76,18 @@ class _BreakTimePerDayCardState extends State<BreakTimePerDayCard> {
       totalBreaks++;
     });
 
-    final url = Uri.parse('https://odoo17e.xsellencebdltd.com/api/access_token/breaktime/employee');
-    final headers = {
+    final url = Uri.parse('https://vxservice17.xsellencebdltd.com/api/breaktime/employee');
+    var headers = {
       'Content-Type': 'application/json',
-      'Cookie': 'frontend_lang=en_US; session_id=7b111f1dba603cb9b9343918d81942386495fdd6'
+      'Cookie': 'session_id=25d17c4a30984924d5862853b1b6a5aa663afe37'
     };
     final body = json.encode({
       "jsonrpc": "2.0",
       "params": {
-        "access_token": "69961c52-0d2d-45fc-b074-2569996d2a88",
-        "secret_key": "6933b91181e74ed2c93b9ff78ad3f872",
-        "api_key": "1394ae6755d2862731871b489fa9444c",
-        "employee_id": widget.employeeId, // Use the employeeId from the widget
+        "access_token": "638a849b-8fdd-4148-a9a0-eb28772c15e6",
+        "secret_key": "956c9db53a453a15effd2497d775f733",
+        "api_key": "8632a5478fe3aaa5d4d25616576b9174",
+        "employee_id": "1453", // Use the employeeId from the widget
         "break_start": DateFormat('yyyy-MM-dd HH:mm:ss').format(breakStartTime!),
         "break_end": DateFormat('yyyy-MM-dd HH:mm:ss').format(breakEndTime),
       }

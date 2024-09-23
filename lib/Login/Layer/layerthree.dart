@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:hrms/BottomNavigation/bottomnav.dart';
+import 'package:hrms/Login/login_service.dart';
 import 'package:hrms/config.dart';
 
 class LayerThree extends StatefulWidget {
@@ -15,10 +13,7 @@ class _LayerThreeState extends State<LayerThree> {
   final TextEditingController _passwordController = TextEditingController();
   bool _isLoading = false;
 
-  Future<void> _authenticate() async {
-    final String username = "admin";
-    final String password = "1234";
-
+  _authenticate({required String username, required String password}) async {
     // Check if username or password is empty
     if (username.isEmpty || password.isEmpty) {
       _showAlertDialog('Error', 'Please enter both username and password');
@@ -29,42 +24,12 @@ class _LayerThreeState extends State<LayerThree> {
       _isLoading = true;
     });
 
-    var headers = {
-      'Content-Type': 'application/json',
-      'Cookie':
-          'frontend_lang=en_US; session_id=cbfdd78053b4151e66cc287241c6860d7442d3b0'
-    };
-    var request = http.Request(
-        'POST',
-        Uri.parse(
-            'https://odoo17e.xsellencebdltd.com/web/session/authenticate'));
-    request.body = json.encode({
-      "jsonrpc": "2.0",
-      "params": {"db": "odoo17e", "login": username, "password": password}
-    });
-    request.headers.addAll(headers);
-
-    http.StreamedResponse response = await request.send();
+    await LoginService.instance
+        .authenticate(context: context, username: username, password: password);
 
     setState(() {
       _isLoading = false;
     });
-
-    if (response.statusCode == 200) {
-      var responseData = await response.stream.bytesToString();
-      var jsonResponse = json.decode(responseData);
-      // Handle successful response here
-      print(jsonResponse);
-      _showAlertDialog('Success', 'Authentication successful');
-      Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => const Bottomnavi()),
-      );
-    } else {
-      print(response.reasonPhrase);
-      // Show error message
-      _showAlertDialog(
-          'Error', 'Authentication failed: Invalid username or password');
-    }
   }
 
   Future<void> _showAlertDialog(String title, String message) async {
@@ -193,7 +158,11 @@ class _LayerThreeState extends State<LayerThree> {
             top: 365,
             right: 60,
             child: InkWell(
-              onTap: _isLoading ? null : _authenticate,
+              onTap: () {
+                _authenticate(
+                    username: _usernameController.text.trim(),
+                    password: _passwordController.text.trim());
+              },
               child: Container(
                 width: 99,
                 height: 35,

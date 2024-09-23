@@ -1,10 +1,13 @@
-import 'package:hrms/Expense/DashBoard/expense_dashboard.dart';
+// import 'package:hrms/Expense/DashBoard/expense_dashboard.dart';
 import 'package:hrms/Holidays/allholidays.dart';
 import 'package:hrms/Homepage.dart';
 import 'package:hrms/Leaves/all_leave.dart';
-import 'package:hrms/checkInOut.dart';
+// import 'package:hrms/checkInOut.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '../Expense/DashBoard/expense_dashboard.dart';
+import '../My Profile/edit_profile.dart';
 
 
 class Bottomnavi extends StatelessWidget {
@@ -51,15 +54,15 @@ class Bottomnavi extends StatelessWidget {
               ),
               label: "Holidays",
             ),
-            NavigationDestination(
-              icon: Image.asset(
-                'assets/icons/expense.png',
-                width: 24,
-                height: 24,
-                color: controller.selectedDestination.value == 3 ? Colors.blue : Colors.grey,
-              ),
-              label: "Expense",
-            ),
+            // NavigationDestination(
+            //   icon: Image.asset(
+            //     'assets/icons/expense.png',
+            //     width: 24,
+            //     height: 24,
+            //     color: controller.selectedDestination.value == 3 ? Colors.blue : Colors.grey,
+            //   ),
+            //   label: "Expense",
+            // ),
             NavigationDestination(
               icon: Image.asset(
                 'assets/icons/user.png',
@@ -85,7 +88,8 @@ class NavigationController extends GetxController {
     HomePage(),
     LeavePage(),
     HolidaysListPage(),
-    ExpenseDashboard(),
-    CheckInOutListPage(),
+    // ExpenseDashboard(),
+    // CheckInOutListPage(),
+    DashboardScreen()
   ];
 }

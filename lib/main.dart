@@ -22,12 +22,19 @@
 
 
 import 'package:flutter/material.dart';
+// import 'package:hrms/Holidays/allholidays.dart';
+// import 'package:hrms/Homepage.dart';
+import 'package:hrms/Login/login_service.dart';
 import 'package:hrms/UserDataProvider.dart';
+import 'package:hrms/checkInOut.dart';
 import 'package:hrms/splash.dart';
 import 'package:provider/provider.dart';
 
 
 void main() {
+
+  WidgetsFlutterBinding.ensureInitialized();
+  LoginService.instance.initPrefs();
   runApp(
     MultiProvider(
       providers: [
@@ -43,7 +50,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SplashScreen(),
+       home: SplashScreen(),
+       //home: DashboardScreen (),
+       //home: EmployeeHistoryScreen(),
+      // home:CheckInOutListPage() ,
+      // home: HomePage(),
     );
   }
 }

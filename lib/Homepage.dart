@@ -404,6 +404,8 @@
 // }
 
 
+// import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:hrms/BreakTimePerDayCard/break_time.dart';
 import 'package:hrms/CheckInCard/checkIn.dart';
@@ -414,7 +416,6 @@ import 'package:hrms/UserDataProvider.dart';
 import 'package:hrms/UserProfileCard/userprofile.dart';
 import 'package:provider/provider.dart';
 
-
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
@@ -424,6 +425,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    //getToken();
     final userDataProvider = Provider.of<UserDataProvider>(context, listen: false);
     userDataProvider.fetchUserData();
   }
@@ -449,10 +451,11 @@ class _HomePageState extends State<HomePage> {
           if (userDataProvider.isLoading) {
             return Center(child: CircularProgressIndicator());
           }
-
-          return RefreshIndicator(
-            onRefresh: userDataProvider.refreshData,
-            child: SingleChildScrollView(
+          return 
+          // RefreshIndicator(
+            //onRefresh: userDataProvider.refreshData,
+            // child: 
+            SingleChildScrollView(
               key: const PageStorageKey<String>('homePageKey'),
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
@@ -473,6 +476,7 @@ class _HomePageState extends State<HomePage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               UserProfileCard(userProfile: userDataProvider.userProfile),
+                              
                             ],
                           ),
                         ),
@@ -588,7 +592,7 @@ class _HomePageState extends State<HomePage> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     MonthCardPerTotalWDays(
-                                      workingDays: userDataProvider.workingDays,
+                                      workingDays: userDataProvider!.workingDays,
                                     ),
                                   ],
                                 ),
@@ -607,14 +611,12 @@ class _HomePageState extends State<HomePage> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15.0),
                         ),
-                        child: const Padding(
+                        child:  Padding(
                           padding: EdgeInsets.all(20.0),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              CurrentLocationCard(
-                                location: 'Banasree, Dhaka',
-                              ),
+                              CurrentLocationCard(),
                             ],
                           ),
                         ),
@@ -623,10 +625,11 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
               ),
-            ),
-          );
+            );
+          //);
         },
       ),
     );
   }
 }
+

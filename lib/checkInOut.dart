@@ -1,3 +1,5 @@
+import 'package:hrms/Login/login.dart';
+import 'package:hrms/Login/login_service.dart';
 import 'package:hrms/Models/checkInOut_models.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -10,6 +12,11 @@ class CheckInOutListPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+
+        leading: IconButton(onPressed: (){
+
+          auth.signOut().then((value) => Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (ctx)=> LoginPage()), (route) => false));
+        }, icon: const Icon(Icons.logout)),
         automaticallyImplyLeading: false, // Set this to false to remove the leading widget
         // leading: IconButton(
         //   icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
