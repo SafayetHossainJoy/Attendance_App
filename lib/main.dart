@@ -22,6 +22,7 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:hrms/Holidays/allholidays.dart';
 // import 'package:hrms/Holidays/allholidays.dart';
 // import 'package:hrms/Homepage.dart';
 import 'package:hrms/Login/login_service.dart';
@@ -50,11 +51,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-       home: SplashScreen(),
+      home: SplashScreen(),
        //home: DashboardScreen (),
        //home: EmployeeHistoryScreen(),
       // home:CheckInOutListPage() ,
       // home: HomePage(),
+      // home: HolidaysListPage(),
     );
   }
 }

@@ -1092,7 +1092,6 @@
 //   }
 // }
 
-
 import 'dart:async';
 import 'dart:convert';
 import 'package:hrms/Login/login_service.dart';
@@ -1139,13 +1138,13 @@ class UserDataProvider with ChangeNotifier {
     }
   }
 
-    Future<void> fetchUserProfile() async {
+  Future<void> fetchUserProfile() async {
     _isLoading = true;
     notifyListeners();
 
     var headers = {
-  'Content-Type': 'application/json',
-  'Cookie': 'frontend_lang=en_US; session_id=${auth.currentSessionId}'
+      'Content-Type': 'application/json',
+      'Cookie': 'frontend_lang=en_US; session_id=${auth.currentSessionId}'
     };
 
     var request = http.Request(
@@ -1200,7 +1199,8 @@ class UserDataProvider with ChangeNotifier {
           throw Exception("Invalid response: 'result' or 'employee' is null.");
         }
       } else {
-        throw Exception("Failed to load user profile. Status code: ${response.statusCode}");
+        throw Exception(
+            "Failed to load user profile. Status code: ${response.statusCode}");
       }
     } catch (e) {
       print("Error fetching user profile: $e");
@@ -1210,13 +1210,14 @@ class UserDataProvider with ChangeNotifier {
       notifyListeners();
     }
   }
+
   Future<void> fetchWorkingDays() async {
     _isLoading = true;
     notifyListeners();
 
     var headers = {
-  'Content-Type': 'application/json',
-  'Cookie': 'frontend_lang=en_US; session_id=${auth.currentSessionId}'
+      'Content-Type': 'application/json',
+      'Cookie': 'frontend_lang=en_US; session_id=${auth.currentSessionId}'
     };
 
     var request = http.Request(
@@ -1228,9 +1229,9 @@ class UserDataProvider with ChangeNotifier {
     request.body = json.encode({
       "jsonrpc": "2.0",
       "params": {
-        "access_token": "638a849b-8fdd-4148-a9a0-eb28772c15e6",
-        "secret_key": "956c9db53a453a15effd2497d775f733",
-        "api_key": "8632a5478fe3aaa5d4d25616576b9174",
+        "access_token": "a802a0d5-fecb-4328-ba0b-ffbaf3f44d76",
+        "secret_key": "e2f0b36ac619a5d40fba357409bdd5e3",
+        "api_key": "2bcbf9c7407900050bd870a925e97a47",
         "employee_id": "1453"
       }
     });

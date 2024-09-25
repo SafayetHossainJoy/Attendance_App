@@ -34,6 +34,7 @@ Future<List<Holiday>> fetchHolidays() async {
         "secret_key": auth.currentSecretKey,
         "api_key": auth.currentApiKey,
         "user_id": auth.currentUserId
+        
     }
   });
   request.headers.addAll(headers);
