@@ -22,12 +22,14 @@
 
 
 import 'package:flutter/material.dart';
-import 'package:hrms/Holidays/allholidays.dart';
+import 'package:hrms/Admin/Time-off_Approver/list_leave.dart';
+import 'package:hrms/Leaves/leave_details.dart';
+// import 'package:hrms/Holidays/allholidays.dart';
 // import 'package:hrms/Holidays/allholidays.dart';
 // import 'package:hrms/Homepage.dart';
 import 'package:hrms/Login/login_service.dart';
 import 'package:hrms/UserDataProvider.dart';
-import 'package:hrms/checkInOut.dart';
+// import 'package:hrms/checkInOut.dart';
 import 'package:hrms/splash.dart';
 import 'package:provider/provider.dart';
 
@@ -51,12 +53,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SplashScreen(),
+      // home: SplashScreen(),
        //home: DashboardScreen (),
        //home: EmployeeHistoryScreen(),
-      // home:CheckInOutListPage() ,
+       //home:CheckInOutListPage() ,
       // home: HomePage(),
       // home: HolidaysListPage(),
+      // home: LeaveDetailsPage(),
+      home: LeaveApprovalPage(),
     );
   }
 }

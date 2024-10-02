@@ -406,7 +406,8 @@ class UserProfileCard extends StatelessWidget {
         const SizedBox(width: 10), // Add some space between the image and text
         CircleAvatar(
           radius: 40, // Adjust the size of the avatar as needed
-          backgroundImage: NetworkImage(userProfile!.image1920), // Replace with your image asset
+          //backgroundImage: NetworkImage(userProfile!.image1920), // Replace with your image asset
+          backgroundImage: AssetImage('assets/images/p.jpeg'),
         ),
       ],
     );

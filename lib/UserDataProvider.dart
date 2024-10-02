@@ -1143,9 +1143,9 @@ class UserDataProvider with ChangeNotifier {
     notifyListeners();
 
     var headers = {
-      'Content-Type': 'application/json',
-      'Cookie': 'frontend_lang=en_US; session_id=${auth.currentSessionId}'
-    };
+  'Content-Type': 'application/json',
+  'Cookie': 'session_id=9c4c7ab1be2cd0f4f54c884bf5195d604d7a28f8'
+};
 
     var request = http.Request(
       'GET',
@@ -1155,10 +1155,10 @@ class UserDataProvider with ChangeNotifier {
     request.body = json.encode({
       "jsonrpc": "2.0",
       "params": {
-        "access_token": auth.currentAccessToken,
-        "secret_key": auth.currentSecretKey,
-        "api_key": auth.currentApiKey,
-        "user_id": auth.currentUserId
+        "access_token": "a802a0d5-fecb-4328-ba0b-ffbaf3f44d76",
+        "secret_key": "e2f0b36ac619a5d40fba357409bdd5e3",
+        "api_key": "2bcbf9c7407900050bd870a925e97a47",
+        "user_id": "26"
       }
     });
 
@@ -1216,9 +1216,9 @@ class UserDataProvider with ChangeNotifier {
     notifyListeners();
 
     var headers = {
-      'Content-Type': 'application/json',
-      'Cookie': 'frontend_lang=en_US; session_id=${auth.currentSessionId}'
-    };
+  'Content-Type': 'application/json',
+  'Cookie': 'session_id=9c4c7ab1be2cd0f4f54c884bf5195d604d7a28f8'
+};
 
     var request = http.Request(
       'GET',

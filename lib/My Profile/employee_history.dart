@@ -178,7 +178,7 @@ class EmployeeHistoryScreenState extends State<EmployeeHistoryScreen> {
             radius: 40,
             backgroundImage: employee?.image != null && employee!.image.isNotEmpty
                 ? NetworkImage(employee!.image) as ImageProvider  // Use network image if available
-                : AssetImage('assets/images/com.png'),  // Placeholder image if no network image
+                : AssetImage('assets/images/p.jpeg'),  // Placeholder image if no network image
           ),
           SizedBox(width: 16),
           Column(
