@@ -33,6 +33,8 @@ import 'package:hrms/UserDataProvider.dart';
 import 'package:hrms/splash.dart';
 import 'package:provider/provider.dart';
 
+import 'Attendance Request/attendance_request.dart';
+
 
 void main() {
 
@@ -60,7 +62,8 @@ class MyApp extends StatelessWidget {
       // home: HomePage(),
       // home: HolidaysListPage(),
       // home: LeaveDetailsPage(),
-      home: LeaveApprovalPage(),
+      // home: LeaveApprovalPage(),
+      home: CheckInOutScreen()
     );
   }
 }

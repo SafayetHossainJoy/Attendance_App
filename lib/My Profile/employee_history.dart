@@ -35,10 +35,11 @@ class EmployeeHistoryScreenState extends State<EmployeeHistoryScreen> {
     request.body = json.encode({
       "jsonrpc": "2.0",
       "params": {
-        "access_token": auth.currentAccessToken,
-        "secret_key": auth.currentSecretKey,
-        "api_key": auth.currentApiKey,
-        "user_id": auth.currentUserId
+        // "access_token": auth.currentAccessToken,
+        // "secret_key": auth.currentSecretKey,
+        // "api_key": auth.currentApiKey,
+        // "user_id": auth.currentUserId
+        "access_token": "42d86d63-6e17-40d9-9720-44930b29a7b2", "secret_key":"bbdb4747d580353db87d1e578e518b15", "api_key":"39d14e1990c5b89a4e44ef677241b789", "user_id":"26"
       }
     });
 
